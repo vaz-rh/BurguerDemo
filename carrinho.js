@@ -4,15 +4,14 @@
   /* ---------- Configurações ---------- */
   var STORAGE_KEY = "devburguer_cart";
   var DELIVERY_FEE = 6;               // taxa de entrega em reais
-  var WHATSAPP_NUMBER = "5541999999999"; // troque pelo número da loja (com DDI e DDD)
 
   // Itens de exemplo: aparecem só na primeira visita, para você testar a página.
   // Quando o cardápio estiver pronto, ele deve salvar o carrinho com addToCart().
   var DEMO_ITEMS = [
-    { id: "classic",  emoji: "🍔", name: "Classic Burguer", desc: "Pão brioche, blend 160 g, queijo e molho da casa", price: 28.9, qty: 2 },
-    { id: "bacon",    emoji: "🥓", name: "Bacon Dev",       desc: "Blend 160 g, bacon crocante e cheddar",           price: 34.5, qty: 1 },
-    { id: "fries",    emoji: "🍟", name: "Batata frita",    desc: "Porção individual",                               price: 14.0, qty: 1 },
-    { id: "cola",     emoji: "🥤", name: "Refrigerante lata", desc: "350 ml",                                        price: 6.0,  qty: 2 }
+    { id: "x-burguer",  emoji: "🍔", name: "Classic Burguer", desc: "Pão brioche, blend 160 g, queijo e molho da casa", price: 28.9, qty: 2 },
+    { id: "x-bacon",    emoji: "🥓", name: "Bacon Dev",       desc: "Blend 160 g, bacon crocante e cheddar",           price: 34.5, qty: 1 },
+    { id: "porcao-batata",    emoji: "🍟", name: "Batata frita",    desc: "Porção individual",                               price: 14.0, qty: 1 },
+    { id: "coca-cola-350",     emoji: "🥤", name: "Refrigerante lata", desc: "350 ml",                                        price: 6.0,  qty: 2 }
   ];
 
   /* ---------- Elementos ---------- */
