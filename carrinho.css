@@ -13,6 +13,11 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  -webkit-text-size-adjust: 100%; /* iOS: não aumenta o texto sozinho ao girar a tela */
+  text-size-adjust: 100%;
+}
+
 body {
   font-family: "Segoe UI", Arial, Helvetica, sans-serif;
   color: var(--ink);
@@ -23,6 +28,11 @@ body {
 a { color: inherit; text-decoration: none; }
 ul { list-style: none; }
 
+a,
+button {
+  -webkit-tap-highlight-color: transparent; /* tira o brilho cinza ao tocar */
+}
+
 :focus-visible {
   outline: 3px solid var(--orange);
   outline-offset: 2px;
@@ -31,6 +41,7 @@ ul { list-style: none; }
 /* ---------- Cabeçalho ---------- */
 .header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 24px;
@@ -49,7 +60,6 @@ ul { list-style: none; }
 .logo-icon { font-size: 1.6rem; }
 
 .nav { display: flex; gap: 40px; font-weight: 600; }
-.nav a:hover { color: var(--orange); }
 
 .header-actions { display: flex; align-items: center; gap: 24px; }
 
@@ -80,10 +90,12 @@ ul { list-style: none; }
   font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
+  -webkit-appearance: none; /* remove o estilo padrão do iOS */
+  appearance: none;
 }
 
 .btn-primary { background: var(--orange); color: var(--white); }
-.btn-primary:hover { background: var(--orange-dark); }
+.btn-primary:active { background: var(--orange-dark); }
 .btn-primary:disabled { background: #f3c1ad; cursor: not-allowed; }
 .btn-block { width: 100%; font-size: 1.05rem; }
 
@@ -98,23 +110,29 @@ ul { list-style: none; }
   text-decoration: underline;
   cursor: pointer;
 }
-.btn-link:hover { color: var(--danger); }
 
 .btn-back {
-    background: var(--orange-dark);
-    display: inline-block;
-    padding: 12px 24px;
-    color: var(--white);
-    border-radius: 8px;
-    font-weight: 600;
-    transition: 0.3s;
-    cursor: pointer;
-    border: none;
+  background: var(--orange-dark);
+  display: inline-block;
+  padding: 12px 24px;
+  color: var(--white);
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.3s;
+  cursor: pointer;
+  border: none;
 }
 
-.btn-back:hover {
-    filter: brightness(0.9);
-    transform: translateY(-2px);
+.btn-back:active { filter: brightness(0.9); }
+
+/* Hover só onde existe mouse (no toque ele "gruda" depois do clique) */
+@media (hover: hover) {
+  .nav a:hover { color: var(--orange); }
+  .btn-primary:hover { background: var(--orange-dark); }
+  .btn-link:hover { color: var(--danger); }
+  .btn-back:hover { filter: brightness(0.9); transform: translateY(-2px); }
+  .qty button:hover { background: var(--orange-soft); }
+  .remove:hover { color: var(--danger); }
 }
 
 /* ---------- Página ---------- */
@@ -130,6 +148,8 @@ ul { list-style: none; }
   gap: 32px;
   align-items: start;
 }
+
+.layout > * { min-width: 0; } /* evita que o conteúdo estique a tela para os lados */
 
 /* ---------- Itens ---------- */
 .items,
@@ -191,8 +211,9 @@ ul { list-style: none; }
   font-size: 1.2rem;
   font-weight: 700;
   cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
 }
-.qty button:hover { background: var(--orange-soft); }
 
 .qty output { min-width: 34px; text-align: center; font-weight: 700; }
 
@@ -205,7 +226,6 @@ ul { list-style: none; }
   text-decoration: underline;
   cursor: pointer;
 }
-.remove:hover { color: var(--danger); }
 
 /* Carrinho vazio */
 .empty { text-align: center; padding: 32px 0 16px; }
@@ -221,6 +241,7 @@ ul { list-style: none; }
 .delivery legend { font-weight: 700; margin-bottom: 10px; padding: 0; }
 
 .check {
+  position: relative; /* a caixa de seleção escondida fica presa a este bloco (evita pulo de tela no iOS) */
   display: flex;
   align-items: flex-start;
   gap: 12px;
@@ -285,10 +306,15 @@ ul { list-style: none; }
 
 .address input {
   width: 100%;
+  min-height: 48px;
   padding: 12px 14px;
   border: 1.5px solid var(--line);
   border-radius: 10px;
   font: inherit;
+  font-size: 16px;          /* abaixo de 16px o iPhone dá zoom ao tocar no campo */
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--white);
 }
 .address input:focus { outline: none; border-color: var(--orange); }
 .address input.invalid { border-color: var(--danger); }
@@ -318,33 +344,84 @@ ul { list-style: none; }
 }
 .totals .total dd { color: var(--orange); font-weight: 700; }
 
-/* ---------- Responsivo ---------- */
+/* ---------- Rodapé ---------- */
+footer {
+  display: flex;
+  padding: 20px 50px 20px;
+  padding-bottom: max(20px, env(safe-area-inset-bottom)); /* barra inferior do iPhone */
+  color: #fff;
+}
+
+/* =========================================================
+   CELULAR E TABLET
+   ========================================================= */
+
 @media (max-width: 900px) {
-  .nav { display: none; }
   .layout { grid-template-columns: 1fr; }
   .summary { position: static; }
 }
 
+/* Celular: cabeçalho em duas linhas (logo + botões em cima, menu embaixo) */
+@media (max-width: 768px) {
+  .header { gap: 8px 12px; padding: 12px 5vw 8px; }
+  .header > * { order: 2; }
+  .logo { order: 1; margin-right: auto; font-size: 1.5rem; }
+
+  .nav {
+    order: 3;
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    font-size: 0.95rem;
+  }
+
+  .header-actions { gap: 14px; }
+
+  .header .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 16px;
+  }
+
+  .cart-link { padding: 8px 10px; }
+  .cart-badge { top: 0; right: 0; }
+
+  footer { flex-wrap: wrap; gap: 8px 16px; padding-left: 5vw; padding-right: 5vw; }
+}
+
+/* Celulares pequenos */
 @media (max-width: 520px) {
   .logo { font-size: 1.35rem; }
-  .header-actions { gap: 16px; }
-  .header .btn { padding: 10px 16px; }
+
+  .page { padding: 24px 5vw 48px; }
+  .page-title { font-size: 1.8rem; margin-bottom: 20px; }
+
+  .items,
+  .summary { padding: 16px; }
+
   .item { grid-template-columns: 52px 1fr; }
   .item-thumb { width: 52px; height: 52px; font-size: 1.6rem; }
+
   .item-side {
     grid-column: 1 / -1;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 8px 12px;
   }
+
+  /* botões grandes o bastante para o dedo (mínimo ~44px) */
+  .qty button { width: 44px; height: 44px; }
+  .qty output { min-width: 36px; }
+  .remove { padding: 12px 0 12px 8px; }
+  .btn-link { padding: 12px; }
+  .btn-block { min-height: 52px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
-
-footer {
-    display: flex;
-    padding: 20px 50px 20px;
-    color: #fff;
-}    
