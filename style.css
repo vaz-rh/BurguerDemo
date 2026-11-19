@@ -37,6 +37,23 @@ html {
     scroll-behavior: smooth;
 }
 
+.cart-link { position: relative; font-size: 1.4rem; }
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -12px;
+  min-width: 20px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--orange);
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+}
+
 .btn {
     background: var(--primary);
     display: inline-block;
@@ -67,6 +84,13 @@ html {
 .btn-light {
     background-color: #fff;
     color: var(--primary);
+}
+
+.menu-grid .btn {
+  border: none;
+  cursor: pointer; 
+  padding: 12px 24px;
+  border-radius: 8px;
 }
 
 .logo {

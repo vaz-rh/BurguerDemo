@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carrinho | DevBurguer</title>
+  <link rel="stylesheet" href="carrinho.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+      <span class="logo-icon" aria-hidden="true">🍔</span>
+      <span>DevBurguer</span>
+    </a>
+
+    <nav class="nav" aria-label="Menu principal">
+      <a href="index.html">Início</a>
+      <a href="cardapio.html">Cardápio</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="contato.html">Contato</a>
+    </nav>
+
+    <div class="header-actions">
+      <a href="carrinho.html" class="cart-link" aria-label="Carrinho">
+        🛒 <span class="cart-badge" id="cart-badge"></span>
+      </a>
+      <a href="cardapio.html" class="btn btn-primary">Peça Agora</a>
+    </div>
+  </header>
+
+  <main class="page">
+    <h1 class="page-title">Seu carrinho</h1>
+
+    <div class="layout">
+
+      <!-- Itens do pedido -->
+      <section class="items" aria-labelledby="titulo-itens">
+        <h2 id="titulo-itens" class="section-title">Itens do pedido</h2>
+        <ul class="item-list" id="item-list"></ul>
+
+        <div class="empty" id="empty" hidden>
+          <p class="empty-icon" aria-hidden="true">🍔</p>
+          <p class="empty-title">Seu carrinho está vazio</p>
+          <p class="empty-text">Escolha seus lanches no cardápio para começar o pedido.</p>
+          <a href="index.html" class="btn btn-primary">Ver cardápio</a>
+        </div>
+      </section>
+
+      <!-- Resumo -->
+      <aside class="summary" aria-labelledby="titulo-resumo">
+        <h2 id="titulo-resumo" class="section-title">Resumo</h2>
+
+        <fieldset class="delivery">
+          <legend>Como você quer receber?</legend>
+
+          <label class="check">
+            <input type="checkbox" id="opt-entrega" checked>
+            <span class="check-box"></span>
+            <span class="check-text">
+              <strong>Receber em casa</strong>
+              <small>Entrega em até 40 min · taxa de <span id="fee-label">R$ 6,00</span></small>
+            </span>
+          </label>
+
+          <label class="check">
+            <input type="checkbox" id="opt-retirada">
+            <span class="check-box"></span>
+            <span class="check-text">
+              <strong>Retirar na loja</strong>
+              <small>Sem taxa de entrega</small>
+            </span>
+          </label>
+        </fieldset>
+
+        <div class="address" id="address-box">
+          <label for="address">Endereço de entrega</label>
+          <input type="text" id="address" placeholder="Rua, número e bairro" autocomplete="street-address">
+          <p class="field-error" id="address-error" hidden>Informe o endereço para receber em casa.</p>
+        </div>
+
+        <dl class="totals">
+          <div class="row">
+            <dt>Subtotal</dt>
+            <dd id="subtotal">R$ 0,00</dd>
+          </div>
+          <div class="row">
+            <dt>Entrega</dt>
+            <dd id="delivery-fee">R$ 0,00</dd>
+          </div>
+          <div class="row total">
+            <dt>Total</dt>
+            <dd id="total">R$ 0,00</dd>
+          </div>
+        </dl>
+
+        <button type="button" class="btn btn-primary btn-block" id="checkout" disabled>Finalizar pedido</button>
+        <button type="button" class="btn-link" id="clear-cart">Esvaziar carrinho</button>
+      </aside>
+
+    </div>
+  </main>
+
+  <footer class="back">
+    <div class="home">
+        <a href="index.html" class="btn-back">Voltar</a>
+    </div>
+  </footer>
+
+  <script src="carrinho.js"></script>
+</body>
+</html>
