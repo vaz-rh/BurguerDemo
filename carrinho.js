@@ -205,8 +205,6 @@
     lines.push("*Total: " + money(subtotal + fee) + "*");
     if (!isPickup()) lines.push("", "Endereço: " + address);
 
-    var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(lines.join("\n"));
-    window.open(url, "_blank", "noopener");
   });
 
   /* ---------- Função para usar na página do cardápio ----------
