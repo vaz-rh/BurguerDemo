@@ -137,6 +137,7 @@
           </div>
         </dl>
 
+        <p class="field-error" id="err-submit" role="alert" hidden></p>
         <button type="submit" form="pay-form" class="btn btn-primary btn-block" id="confirm">Confirmar pedido</button>
         <a href="carrinho.html" class="btn-link">Voltar ao carrinho</a>
       </aside>
@@ -151,19 +152,29 @@
       <a href="carrinho.html" class="btn btn-primary">Ir para o carrinho</a>
     </section>
 
-    <!-- Pedido enviado -->
+    <!-- Pedido recebido -->
     <section class="empty done" id="done" hidden>
       <p class="empty-icon" aria-hidden="true">✅</p>
-      <p class="empty-title">Pedido enviado!</p>
+      <p class="empty-title">Pedido recebido!</p>
       <p class="done-order" id="done-order"></p>
       <p class="empty-text" id="done-text"></p>
+
+      <div class="panel done-pix" id="done-pix" hidden>
+        <div class="pix-row">
+          <input type="text" id="done-pix-key" readonly aria-label="Chave Pix">
+          <button type="button" class="btn btn-primary" id="done-copy-pix">Copiar</button>
+        </div>
+      </div>
+
       <div class="done-actions">
-        <a href="#" class="btn btn-primary" id="done-whatsapp" target="_blank" rel="noopener">Abrir WhatsApp</a>
+        <a href="https://w.app/m4yedv" class="btn btn-primary" id="done-whatsapp" target="_blank" rel="noopener" hidden>Enviar comprovante</a>
         <a href="index.html" class="btn btn-outline">Voltar ao início</a>
       </div>
     </section>
   </main>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9"></script>
+  <script src="supabase-config.js"></script>
   <script src="produtos.js"></script>
   <script src="pagamento.js"></script>
 </body>

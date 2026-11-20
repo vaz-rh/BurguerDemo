@@ -2,9 +2,10 @@
   "use strict";
 
   /* ---------- Configurações ---------- */
-  var CHECKOUT_KEY = "devburguer_checkout"; // entrega/retirada e endereço, salvos pelo carrinho.js
-  var WHATSAPP_NUMBER = "5548988176263";    // troque pelo número da loja (com DDI e DDD)
-  var PIX_KEY = "SUA-CHAVE-PIX-AQUI";       // troque pela chave Pix da loja
+  var CHECKOUT_KEY = "devburguer_checkout";  // entrega/retirada e endereço, salvos pelo carrinho.js
+  var LAST_ORDER_KEY = "devburguer_last_order"; // último pedido (usado na página de acompanhamento)
+  var WHATSAPP_LINK = "https://w.app/m4yedv"; // usado só para enviar o comprovante do Pix
+  var PIX_KEY = "SUA-CHAVE-PIX-AQUI";         // troque pela chave Pix da loja
 
   /* ---------- Elementos ---------- */
   var $ = function (id) { return document.getElementById(id); };
@@ -20,12 +21,13 @@
   var pixInput = $("pix-key");
   var copyBtn = $("copy-pix");
   var confirmBtn = $("confirm");
+  var submitError = $("err-submit");
   var radios = form.querySelectorAll('input[name="payment"]');
   var panels = { pix: $("panel-pix"), card: $("panel-card"), cash: $("panel-cash") };
 
   /* ---------- Utilidades ---------- */
   function money(value) {
-    return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+    return Number(value).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
   }
 
   function escapeHtml(text) {
@@ -183,45 +185,94 @@
     $("err-change").hidden = true;
   });
 
-  /* ---------- Mensagem do pedido ---------- */
-  function methodLabel(method) {
-    var where = isPickup ? "retirada" : "entrega";
-    if (method === "pix") return "Pix (vou enviar o comprovante)";
-    if (method === "card") return "Cartão de " + cardType.value + " na " + where;
+  /* ---------- Enviar o pedido ao Supabase ---------- */
+  function friendlyError(error) {
+    var text = (error && error.message) || "";
 
-    var change = parseMoney(changeInput.value);
-    return "Dinheiro na " + where + (change ? " - troco para " + money(change) : " - sem troco");
+    if (text.indexOf("PRECO_DIVERGENTE") > -1 || text.indexOf("PRODUTO_INVALIDO") > -1) {
+      return "O cardápio foi atualizado. Volte ao carrinho, confira os itens e tente de novo.";
+    }
+    if (text.indexOf("MUITOS_PEDIDOS") > -1) {
+      return "Você fez vários pedidos em pouco tempo. Aguarde alguns minutos e tente de novo.";
+    }
+    if (text.indexOf("TROCO_INVALIDO") > -1) {
+      return "O valor do troco precisa ser maior ou igual ao total do pedido.";
+    }
+    if (text.indexOf("DADOS_INVALIDOS") > -1) {
+      return "Confira seus dados (nome, telefone e endereço) e tente de novo.";
+    }
+    return "Não foi possível enviar o pedido agora. Verifique sua conexão e tente de novo.";
   }
 
-  function buildMessage(orderNumber, method) {
-    var lines = ["*Novo pedido - DevBurguer*", "Pedido nº " + orderNumber, ""];
-
-    lines.push("Cliente: " + nameInput.value.trim());
-    lines.push("Telefone: " + phoneInput.value);
-    lines.push("");
-
-    cart.forEach(function (item) {
-      lines.push(item.qty + "x " + item.name + " - " + money(item.price * item.qty));
+  function sendOrder(method, changeFor) {
+    return window.db.rpc("create_order", {
+      p_customer_name: nameInput.value.trim(),
+      p_customer_phone: phoneInput.value,
+      p_mode: checkout.mode,
+      p_address: isPickup ? null : checkout.address,
+      p_payment_method: method,
+      p_card_type: method === "card" ? cardType.value : null,
+      p_change_for: method === "cash" ? changeFor : null,
+      p_items: cart.map(function (item) { return { id: item.id, qty: item.qty }; }),
+      p_expected_total: Math.round(total * 100) / 100
     });
-
-    lines.push("");
-    lines.push("Subtotal: " + money(subtotal));
-    lines.push(isPickup ? "Retirada na loja" : "Entrega: " + money(fee));
-    lines.push("*Total: " + money(total) + "*");
-    lines.push("");
-    if (!isPickup) lines.push("Endereço: " + checkout.address);
-    lines.push("Pagamento: " + methodLabel(method));
-
-    return lines.join("\n");
   }
 
-  /* ---------- Confirmar pedido ---------- */
+  function showDone(order, method) {
+    var where = isPickup ? "retirada" : "entrega";
+    var text;
+
+    if (method === "pix") {
+      text = "Pague com o Pix usando a chave abaixo e envie o comprovante pelo WhatsApp. Seu pedido será preparado assim que o pagamento for confirmado.";
+    } else if (method === "card") {
+      text = "Pagamento com cartão na " + where + ". Já estamos preparando seu pedido!";
+    } else {
+      text = "Pagamento em dinheiro na " + where + ". Já estamos preparando seu pedido!";
+    }
+
+    $("done-order").textContent = "Pedido nº " + order.number + " · Total " + money(order.total);
+    $("done-text").textContent = text;
+
+    var pixBox = $("done-pix");
+    pixBox.hidden = method !== "pix";
+    $("done-pix-key").value = PIX_KEY;
+    $("done-whatsapp").href = WHATSAPP_LINK;
+    $("done-whatsapp").hidden = method !== "pix";
+
+    layoutEl.hidden = true;
+    doneEl.hidden = false;
+    window.scrollTo(0, 0);
+  }
+
+  $("done-copy-pix").addEventListener("click", function () {
+    var button = $("done-copy-pix");
+    var box = $("done-pix-key");
+
+    function ok() {
+      button.textContent = "Copiado ✓";
+      setTimeout(function () { button.textContent = "Copiar"; }, 1500);
+    }
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(PIX_KEY).then(ok, function () {});
+    } else {
+      box.focus();
+      box.select();
+      box.setSelectionRange(0, 99999);
+      try { if (document.execCommand("copy")) ok(); } catch (e) { /* o cliente copia manualmente */ }
+    }
+  });
+
+  var sending = false;
+
   form.addEventListener("submit", function (event) {
     event.preventDefault();
+    if (sending) return;
     clearErrors();
 
     var problems = [];
     var method = selectedMethod();
+    var changeFor = null;
 
     if (nameInput.value.trim().length < 3) {
       showError("err-name", "Informe seu nome completo.", nameInput);
@@ -240,11 +291,11 @@
     }
 
     if (method === "cash" && changeInput.value.trim() !== "") {
-      var change = parseMoney(changeInput.value);
-      if (change === null) {
+      changeFor = parseMoney(changeInput.value);
+      if (changeFor === null) {
         showError("err-change", "Digite um valor válido, por exemplo 100,00.", changeInput);
         problems.push(changeInput);
-      } else if (change < total) {
+      } else if (changeFor < total) {
         showError("err-change", "O valor do troco precisa ser maior ou igual ao total (" + money(total) + ").", changeInput);
         problems.push(changeInput);
       }
@@ -255,28 +306,41 @@
       return;
     }
 
+    if (!window.db) {
+      showError("err-submit", "Não foi possível conectar ao sistema de pedidos. Tente novamente mais tarde.");
+      return;
+    }
+
+    sending = true;
     confirmBtn.disabled = true;
+    confirmBtn.textContent = "Enviando...";
 
-    var orderNumber = String(Date.now()).slice(-5);
-    var url = "https://w.app/m4yedv" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(buildMessage(orderNumber, method));
+    sendOrder(method, changeFor).then(function (result) {
+      if (result.error || !result.data) {
+        showError("err-submit", friendlyError(result.error));
+        return;
+      }
 
-    // Tela de confirmação
-    $("done-order").textContent = "Pedido nº " + orderNumber + " · Total " + money(total);
-    $("done-text").textContent = method === "pix"
-      ? "Abra o WhatsApp para enviar o pedido e mande o comprovante do Pix para confirmarmos."
-      : "Abra o WhatsApp para enviar o pedido. " + (isPickup ? "Avisaremos quando estiver pronto para retirada." : "Em instantes ele sai para entrega.");
-    $("done-whatsapp").href = url;
+      var order = result.data;
 
-    // O pedido foi montado: esvazia o carrinho e os dados de entrega
-    if (Store) Store.clearCart();
-    try { localStorage.removeItem(CHECKOUT_KEY); } catch (e) { /* ignora */ }
-    cart = [];
-    updateBadge();
+      // Guarda o número do pedido para acompanhar depois
+      try {
+        localStorage.setItem(LAST_ORDER_KEY, JSON.stringify({ number: order.number, phone: phoneDigits }));
+        localStorage.removeItem(CHECKOUT_KEY);
+      } catch (e) { /* ignora */ }
 
-    layoutEl.hidden = true;
-    doneEl.hidden = false;
-    window.scrollTo(0, 0);
+      // O pedido foi recebido: esvazia o carrinho
+      if (Store) Store.clearCart();
+      cart = [];
+      updateBadge();
 
-    window.open(url, "_blank", "noopener");
+      showDone(order, method);
+    }).catch(function (error) {
+      showError("err-submit", friendlyError(error));
+    }).then(function () {
+      sending = false;
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = "Confirmar pedido";
+    });
   });
 })();

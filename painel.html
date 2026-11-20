@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Painel de pedidos | DevBurguer</title>
+  <link rel="stylesheet" href="painel.css">
+</head>
+<body>
+
+  <!-- Login da equipe -->
+  <section class="login" id="login-view" hidden>
+    <form class="login-card" id="login-form" novalidate>
+      <p class="login-logo" aria-hidden="true">🍔</p>
+      <h1>DevBurguer</h1>
+      <p class="login-sub">Painel de pedidos</p>
+
+      <label for="email">E-mail</label>
+      <input type="email" id="email" autocomplete="username" required>
+
+      <label for="password">Senha</label>
+      <input type="password" id="password" autocomplete="current-password" required>
+
+      <p class="error" id="login-error" role="alert" hidden></p>
+      <button type="submit" class="btn btn-primary" id="login-btn">Entrar</button>
+    </form>
+  </section>
+
+  <!-- Painel -->
+  <section id="app-view" hidden>
+    <header class="bar">
+      <h1>Pedidos de hoje</h1>
+      <span class="live" id="live">○ Conectando...</span>
+      <div class="bar-actions">
+        <button type="button" class="btn btn-ghost" id="sound" aria-pressed="true">🔔 Som ligado</button>
+        <button type="button" class="btn btn-ghost" id="logout">Sair</button>
+      </div>
+    </header>
+
+    <p class="error board-error" id="board-error" role="alert" hidden></p>
+
+    <main class="board" id="board">
+      <section class="col" aria-labelledby="h-new">
+        <h2 id="h-new">Novos <span class="count" id="count-new">0</span></h2>
+        <div class="cards" id="list-new"></div>
+      </section>
+
+      <section class="col" aria-labelledby="h-prep">
+        <h2 id="h-prep">Em preparo <span class="count" id="count-prep">0</span></h2>
+        <div class="cards" id="list-prep"></div>
+      </section>
+
+      <section class="col" aria-labelledby="h-go">
+        <h2 id="h-go">Prontos / a caminho <span class="count" id="count-go">0</span></h2>
+        <div class="cards" id="list-go"></div>
+      </section>
+
+      <section class="col" aria-labelledby="h-done">
+        <h2 id="h-done">Finalizados <span class="count" id="count-done">0</span></h2>
+        <div class="cards" id="list-done"></div>
+      </section>
+    </main>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9"></script>
+  <script src="supabase-config.js"></script>
+  <script src="painel.js"></script>
+</body>
+</html>

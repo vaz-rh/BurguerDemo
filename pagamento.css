@@ -131,6 +131,12 @@
 .done-order { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
 .done .empty-text { max-width: 440px; margin-left: auto; margin-right: auto; }
 
+.done-pix {
+  max-width: 440px;
+  margin: 0 auto 18px;
+  text-align: left;
+}
+
 .done-actions {
   display: flex;
   flex-wrap: wrap;
@@ -147,3 +153,6 @@
   .pix-row .btn { min-height: 48px; }
   .done-actions .btn { flex: 1 1 100%; text-align: center; }
 }
+
+/* O atributo hidden precisa vencer o display dos botões */
+.btn[hidden] { display: none; }

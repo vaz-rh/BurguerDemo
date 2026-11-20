@@ -1,0 +1,56 @@
+/* Política de privacidade: depende do carrinho.css (carregue os dois, nesta ordem) */
+
+.policy { max-width: 860px; }
+
+.policy .page-title { margin-bottom: 8px; }
+.policy .updated { color: var(--muted); margin-bottom: 20px; }
+
+.policy h2 {
+  margin: 32px 0 10px;
+  font-size: 1.25rem;
+}
+
+.policy p { margin-bottom: 12px; }
+
+.policy ul {
+  list-style: disc;
+  margin: 0 0 12px;
+  padding-left: 22px;
+}
+
+.policy li { margin-bottom: 8px; }
+
+.policy a { color: var(--orange-dark); text-decoration: underline; }
+
+.table-wrap {
+  margin: 12px 0 16px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+}
+
+.policy table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.policy th,
+.policy td {
+  padding: 12px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.policy tr:last-child td { border-bottom: 0; }
+.policy th { background: var(--orange-soft); }
+
+/* Campos que a loja precisa preencher antes de publicar */
+.preencher {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: #fff3a3;
+}
