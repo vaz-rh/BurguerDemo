@@ -3,6 +3,7 @@
 
   /* ---------- Configurações ---------- */
   var CHECKOUT_KEY = "devburguer_checkout"; // entrega/retirada e endereço, salvos pelo carrinho.js
+  var WHATSAPP_NUMBER = "5541999999999";    // troque pelo número da loja (com DDI e DDD)
   var PIX_KEY = "SUA-CHAVE-PIX-AQUI";       // troque pela chave Pix da loja
 
   /* ---------- Elementos ---------- */
