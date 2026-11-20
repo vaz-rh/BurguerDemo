@@ -3,7 +3,7 @@
 
   /* ---------- Configurações ---------- */
   var CHECKOUT_KEY = "devburguer_checkout"; // entrega/retirada e endereço, salvos pelo carrinho.js
-  var WHATSAPP_NUMBER = "5541999999999";    // troque pelo número da loja (com DDI e DDD)
+  var WHATSAPP_NUMBER = "5548988176263";    // troque pelo número da loja (com DDI e DDD)
   var PIX_KEY = "SUA-CHAVE-PIX-AQUI";       // troque pela chave Pix da loja
 
   /* ---------- Elementos ---------- */
@@ -258,7 +258,7 @@
     confirmBtn.disabled = true;
 
     var orderNumber = String(Date.now()).slice(-5);
-    var url = "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(buildMessage(orderNumber, method));
+    var url = "https://w.app/m4yedv" + WHATSAPP_NUMBER + "?text=" + encodeURIComponent(buildMessage(orderNumber, method));
 
     // Tela de confirmação
     $("done-order").textContent = "Pedido nº " + orderNumber + " · Total " + money(total);
