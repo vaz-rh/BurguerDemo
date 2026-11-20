@@ -1,0 +1,149 @@
+/* Página de pagamento: depende do carrinho.css (carregue os dois, nesta ordem) */
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.crumbs a { text-decoration: underline; }
+.crumbs strong { color: var(--ink); }
+
+.layout[hidden] { display: none; }
+
+.form-section + .form-section { margin-top: 28px; }
+
+/* ---------- Campos ---------- */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;            /* abaixo de 16px o iPhone dá zoom ao tocar no campo */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.field select {
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+}
+
+.field input:focus,
+.field select:focus { outline: none; border-color: var(--orange); }
+
+.field input.invalid { border-color: var(--danger); }
+
+.field-hint { margin-top: 6px; color: var(--muted); font-size: 0.85rem; }
+
+/* ---------- Formas de pagamento ---------- */
+.methods { border: 0; min-width: 0; }
+.methods legend { padding: 0; }
+
+/* Mesmo cartão do carrinho, mas com bolinha em vez de quadradinho */
+.check--radio .check-box { border-radius: 50%; }
+
+.check--radio input:checked + .check-box::after {
+  width: 10px;
+  height: 10px;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--white);
+  transform: none;
+}
+
+.panel {
+  margin: -2px 0 12px;
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--orange-soft);
+}
+.panel[hidden] { display: none; }
+.panel p { margin-bottom: 12px; font-size: 0.95rem; }
+
+.pix-row { display: flex; gap: 8px; }
+.pix-row input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.pix-row .btn { padding: 12px 18px; }
+
+/* ---------- Resumo ---------- */
+.mini-list { margin-bottom: 14px; }
+
+.mini-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  font-size: 0.95rem;
+}
+.mini-list li span:last-child { font-weight: 600; white-space: nowrap; }
+
+.recv {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--orange-soft);
+  font-size: 0.95rem;
+}
+.recv strong { display: block; }
+.recv span { color: var(--muted); }
+
+/* ---------- Botão secundário e tela final ---------- */
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--orange);
+  color: var(--orange);
+}
+
+.empty[hidden] { display: none; }
+
+.done-order { color: var(--muted); font-size: 0.95rem; margin-top: 4px; }
+.done .empty-text { max-width: 440px; margin-left: auto; margin-right: auto; }
+
+.done-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+@media (hover: hover) {
+  .btn-outline:hover { background: var(--orange); color: var(--white); }
+}
+
+@media (max-width: 520px) {
+  .pix-row { flex-direction: column; }
+  .pix-row .btn { min-height: 48px; }
+  .done-actions .btn { flex: 1 1 100%; text-align: center; }
+}

@@ -16,7 +16,7 @@
 
     <div class="header-actions">
       <a href="carrinho.html" class="cart-link" aria-label="Carrinho">
-        🛒 <span class="cart-badge" id="cart-badge"></span>
+        🛒 <span class="cart-badge" id="cart-badge">0</span>
       </a>
       <a href="cardapio.html" class="btn btn-primary">Peça Agora</a>
     </div>
@@ -36,7 +36,7 @@
           <p class="empty-icon" aria-hidden="true">🍔</p>
           <p class="empty-title">Seu carrinho está vazio</p>
           <p class="empty-text">Escolha seus lanches no cardápio para começar o pedido.</p>
-          <a href="index.html" class="btn btn-primary">Ver cardápio</a>
+          <a href="cardapio.html" class="btn btn-primary">Ver cardápio</a>
         </div>
       </section>
 
@@ -87,7 +87,7 @@
           </div>
         </dl>
 
-        <button type="button" class="btn btn-primary btn-block" id="checkout" disabled>Finalizar pedido</button>
+        <button type="button" class="btn btn-primary btn-block" id="checkout" disabled>Finalizar Pedido</button>
         <button type="button" class="btn-link" id="clear-cart">Esvaziar carrinho</button>
       </aside>
 
@@ -95,11 +95,12 @@
   </main>
 
   <footer class="back">
-    <div class="home">
-        <a href="index.html" class="btn-back">Voltar</a>
+    <div>
+      <a href="index.html" class="btn-back">Voltar</a>
     </div>
   </footer>
 
+  <script src="produtos.js"></script>
   <script src="carrinho.js"></script>
 </body>
 </html>
