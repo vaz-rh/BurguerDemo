@@ -57,9 +57,31 @@
     return "(" + d.slice(0, 2) + ") " + d.slice(2, 7) + "-" + d.slice(7);
   }
 
+  var Store = window.DevBurguer; // cardápio, taxa e carrinho (produtos.js)
+
+  function showUnavailable() {
+    noOrderEl.querySelector(".empty-title").textContent = "Não foi possível carregar o cardápio";
+    noOrderEl.querySelector(".empty-text").textContent = "Verifique sua conexão e volte ao carrinho para tentar de novo.";
+    noOrderEl.hidden = false;
+  }
+
+  if (!Store) {
+    showUnavailable();
+    return;
+  }
+
+  // Preços e taxa vêm do banco: só monta a página depois de carregá-los
+  Store.ready().then(function (status) {
+    if (!status.ok) {
+      showUnavailable();
+      return;
+    }
+    start();
+  });
+
+  function start() {
   /* ---------- Dados do pedido (vindos do carrinho.js) ---------- */
-  var Store = window.DevBurguer; // produtos e carrinho compartilhados (produtos.js)
-  var cart = Store ? Store.getCart() : [];
+  var cart = Store.getCart();
   var checkout = read(CHECKOUT_KEY);
 
   var hasOrder =
@@ -68,7 +90,7 @@
     (checkout.mode === "pickup" || (checkout.mode === "delivery" && checkout.address));
 
   function updateBadge() {
-    if (Store) Store.updateBadge();
+    Store.updateBadge();
   }
 
   updateBadge();
@@ -80,7 +102,7 @@
 
   var isPickup = checkout.mode === "pickup";
   var subtotal = cart.reduce(function (sum, item) { return sum + item.price * item.qty; }, 0);
-  var fee = isPickup ? 0 : Number(checkout.fee) || 0;
+  var fee = isPickup ? 0 : Store.getDeliveryFee() || 0; // taxa vem do banco
   var total = subtotal + fee;
 
   /* ---------- Resumo ---------- */
@@ -343,4 +365,5 @@
       confirmBtn.textContent = "Confirmar pedido";
     });
   });
+  } // fim de start()
 })();

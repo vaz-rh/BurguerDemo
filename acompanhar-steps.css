@@ -1,0 +1,8 @@
+/* Suporte a 4 ou 5 etapas (com Pagamento Pix) */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(var(--step-cols, 4), 1fr);
+  gap: 8px;
+  margin: 24px 0;
+  counter-reset: step;
+}

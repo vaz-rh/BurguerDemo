@@ -73,7 +73,8 @@ create table if not exists public.admins (
 
 -- ---------------------------------------------------------------------
 -- 2. CARDÁPIO INICIAL
---    Mantenha os ids e preços IGUAIS aos do produtos.js do site.
+--    Só cria os produtos que ainda não existem. Depois disso, edite o cardápio
+--    em Table Editor > products (veja o supabase-cardapio.sql).
 -- ---------------------------------------------------------------------
 insert into public.products (id, name, description, price) values
   ('x-burguer',     'X-Burguer',       'Pão brioche, hamburguer 180g, queijo cheddar, alface, tomate e molho especial', 29.90),
@@ -82,10 +83,7 @@ insert into public.products (id, name, description, price) values
   ('porcao-batata', 'Porção de fritas','Batata frita 300g', 22.90),
   ('coca-cola-350', 'Coca Cola',       'Coca Cola 350ml', 8.90),
   ('milkshake',     'MilkShake',       'MilkShake com várias opções de sabores', 23.90)
-on conflict (id) do update
-  set name = excluded.name,
-      description = excluded.description,
-      price = excluded.price;
+on conflict (id) do nothing;  -- não sobrescreve se você já editou o cardápio
 
 
 -- ---------------------------------------------------------------------

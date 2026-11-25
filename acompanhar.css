@@ -1,0 +1,158 @@
+/* Acompanhamento do pedido: depende do carrinho.css (carregue os dois, nesta ordem) */
+
+.track { max-width: 760px; }
+
+.track-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap: 12px;
+  align-items: end;
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.field input {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;            /* abaixo de 16px o iPhone dá zoom ao tocar no campo */
+  -webkit-appearance: none;
+  appearance: none;
+}
+.field input:focus { outline: none; border-color: var(--orange); }
+
+.track-form .btn { min-height: 48px; }
+
+#err-track { margin-bottom: 16px; }
+
+/* ---------- Resultado ---------- */
+.result[hidden] { display: none; }
+
+.result-head { margin-bottom: 4px; color: var(--muted); font-size: 0.95rem; }
+
+.result-status {
+  margin-bottom: 4px;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.result-time { color: var(--muted); font-size: 0.9rem; }
+
+/* Etapas */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 24px 0;
+  counter-reset: step;
+}
+
+.step {
+  position: relative;
+  padding-top: 40px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+.step::before {
+  content: counter(step);
+  counter-increment: step;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--line);
+  color: var(--muted);
+  font-weight: 700;
+  transform: translateX(-50%);
+  z-index: 1;
+}
+
+.step::after {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: calc(50% + 20px);
+  width: calc(100% - 26px);
+  height: 3px;
+  background: var(--line);
+}
+.step:last-child::after { display: none; }
+
+.step.done::before,
+.step.current::before { background: var(--orange); color: var(--white); }
+
+.step.done::after { background: var(--orange); }
+
+.step.current { color: var(--ink); font-weight: 700; }
+.step.current::before { box-shadow: 0 0 0 4px var(--orange-soft); }
+
+/* Avisos */
+.notice {
+  margin-bottom: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--orange-soft);
+  font-size: 0.95rem;
+}
+.notice a { color: var(--orange-dark); text-decoration: underline; }
+.notice.cancel { background: #fde8e4; color: var(--danger); }
+
+/* Itens e total */
+.result .mini-list { margin-bottom: 12px; }
+
+.result .mini-list li {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--line);
+}
+.result .mini-list li:last-child { border-bottom: 0; }
+
+.result-total {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+.result-total span:last-child { color: var(--orange); }
+
+.result-foot { color: var(--muted); font-size: 0.85rem; text-align: center; }
+.result-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 14px; }
+.result-actions .btn { flex: 1 1 200px; text-align: center; }
+
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--orange);
+  color: var(--orange);
+}
+
+@media (hover: hover) {
+  .btn-outline:hover { background: var(--orange); color: var(--white); }
+}
+
+@media (max-width: 640px) {
+  .track-form { grid-template-columns: 1fr; }
+  .result-status { font-size: 1.25rem; }
+  .step { font-size: 0.75rem; }
+}

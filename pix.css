@@ -1,0 +1,60 @@
+/* Pix com QR Code: usado em pagamento.html e acompanhar.html (depende do carrinho.css) */
+
+.pix-box {
+  max-width: 420px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.pix-total { margin-bottom: 8px; font-size: 1.1rem; }
+
+.pix-qr {
+  display: block;
+  width: 220px;
+  height: 220px;
+  margin: 8px auto 12px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.pix-hint { margin-bottom: 12px; color: var(--muted); font-size: 0.9rem; }
+
+.pix-box .pix-row { display: flex; gap: 8px; margin-bottom: 12px; }
+
+.pix-box .pix-row input {
+  flex: 1;
+  min-width: 0;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--ink);
+  font: inherit;
+  font-size: 16px;            /* abaixo de 16px o iPhone dá zoom ao tocar no campo */
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.pix-box .pix-row .btn { padding: 12px 18px; white-space: nowrap; }
+
+.pix-timer { margin-bottom: 6px; color: var(--muted); font-size: 0.9rem; }
+
+.pix-status {
+  margin: 6px 0 0;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--orange-soft);
+  font-weight: 700;
+}
+.pix-status.paid { background: #e3f5ea; color: #1e8e4e; }
+
+.pix-ended { max-width: 420px; margin: 0 auto; }
+.pix-ended .btn { margin-top: 12px; }
+
+@media (max-width: 520px) {
+  .pix-box .pix-row { flex-direction: column; }
+  .pix-box .pix-row .btn { min-height: 48px; }
+}

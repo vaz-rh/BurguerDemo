@@ -1,15 +1,15 @@
 (function () {
   "use strict";
 
-  /* Os produtos e o carrinho vêm do produtos.js (carregue-o antes deste arquivo) */
+  /* Os produtos vêm do banco, pelo produtos.js (carregue-o antes deste arquivo) */
   var Store = window.DevBurguer;
   var grid = document.querySelector(".menu-grid");
 
+  if (!grid) return;
   if (!Store) {
     console.error("cardapio.js: carregue produtos.js antes.");
     return;
   }
-  if (!grid) return;
 
   function money(value) {
     return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -18,14 +18,22 @@
   function escapeHtml(text) {
     var div = document.createElement("div");
     div.textContent = text;
-    return div.innerHTML;
+    return div.innerHTML.replace(/"/g, "&quot;");
+  }
+
+  function statusItem(message) {
+    return '<li class="menu-status">' + escapeHtml(message) + "</li>";
   }
 
   /* ---------- Montar os cards ---------- */
   function cardHtml(p) {
+    var picture = p.image
+      ? '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.name) + '" loading="lazy">'
+      : '<div class="menu-emoji" aria-hidden="true">' + escapeHtml(p.emoji) + "</div>";
+
     return (
       "<li>" +
-        '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.name) + '" loading="lazy">' +
+        picture +
         (p.badge ? '<span class="badge">' + escapeHtml(p.badge) + "</span>" : "") +
         "<h3>" + escapeHtml(p.name) + "</h3>" +
         "<p>" + escapeHtml(p.desc) + "</p>" +
@@ -35,7 +43,22 @@
     );
   }
 
-  grid.innerHTML = Store.products.map(cardHtml).join("");
+  grid.setAttribute("aria-busy", "true");
+  grid.innerHTML = statusItem("Carregando cardápio...");
+
+  Store.ready().then(function (status) {
+    var products = Store.getProducts();
+
+    if (!status.ok) {
+      grid.innerHTML = statusItem("Não foi possível carregar o cardápio agora. Atualize a página em instantes.");
+    } else if (products.length === 0) {
+      grid.innerHTML = statusItem("O cardápio está indisponível no momento.");
+    } else {
+      grid.innerHTML = products.map(cardHtml).join("");
+    }
+
+    grid.setAttribute("aria-busy", "false");
+  });
 
   /* ---------- Clique no botão "Pedir" ---------- */
   grid.addEventListener("click", function (event) {

@@ -156,3 +156,12 @@
 
 /* O atributo hidden precisa vencer o display dos botões */
 .btn[hidden] { display: none; }
+
+/* Avisos de privacidade */
+.legal {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+.legal a { color: var(--orange-dark); text-decoration: underline; }
+.legal-center { margin: 12px 0 0; text-align: center; }

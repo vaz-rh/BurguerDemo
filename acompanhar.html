@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Acompanhar pedido | DevBurguer</title>
+  <link rel="stylesheet" href="carrinho.css">
+  <link rel="stylesheet" href="acompanhar.css">
+</head>
+<body>
+
+  <header class="header">
+    <a href="index.html" class="logo">
+      <span class="logo-icon" aria-hidden="true">🍔</span>
+      <span>DevBurguer</span>
+    </a>
+
+    <div class="header-actions">
+      <a href="carrinho.html" class="cart-link" aria-label="Carrinho">
+        🛒 <span class="cart-badge" id="cart-badge">0</span>
+      </a>
+      <a href="cardapio.html" class="btn btn-primary">Peça Agora</a>
+    </div>
+  </header>
+
+  <main class="page track">
+    <h1 class="page-title">Acompanhar pedido</h1>
+
+    <form class="items track-form" id="track-form" novalidate>
+      <div class="field">
+        <label for="order-number">Número do pedido</label>
+        <input type="text" id="order-number" inputmode="numeric" autocomplete="off" placeholder="Ex.: 1001">
+      </div>
+
+      <div class="field">
+        <label for="phone">Telefone usado no pedido</label>
+        <input type="tel" id="phone" inputmode="tel" autocomplete="tel" placeholder="(41) 99999-9999">
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="search-btn">Acompanhar</button>
+    </form>
+
+    <p class="field-error" id="err-track" role="alert" hidden></p>
+
+    <section class="items result" id="result" aria-live="polite" hidden></section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.110.9"></script>
+  <script src="supabase-config.js"></script>
+  <script src="produtos.js"></script>
+  <script src="acompanhar.js"></script>
+</body>
+</html>

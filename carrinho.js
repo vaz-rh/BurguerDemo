@@ -2,7 +2,6 @@
   "use strict";
 
   /* ---------- Configurações ---------- */
-  var DELIVERY_FEE = 6;                      // taxa de entrega em reais
   var CHECKOUT_KEY = "devburguer_checkout";  // entrega/retirada e endereço, lidos pela página de pagamento
 
   /* Produtos e carrinho vêm do produtos.js (carregue-o antes deste arquivo) */
@@ -10,6 +9,11 @@
   if (!Store) {
     console.error("carrinho.js: carregue produtos.js antes.");
     return;
+  }
+
+  // A taxa vem do banco (tabela settings), pelo produtos.js
+  function deliveryFee() {
+    return Store.getDeliveryFee() || 0;
   }
 
   /* ---------- Elementos ---------- */
@@ -28,6 +32,7 @@
   var addressError = $("address-error");
   var checkoutBtn = $("checkout");
   var clearBtn = $("clear-cart");
+  var loadErr = $("err-load");
 
   var cart = []; // itens completos, relidos do produtos.js a cada render()
 
@@ -83,12 +88,12 @@
 
   function updateTotals() {
     var subtotal = cart.reduce(function (sum, item) { return sum + item.price * item.qty; }, 0);
-    var fee = cart.length === 0 || isPickup() ? 0 : DELIVERY_FEE;
+    var fee = cart.length === 0 || isPickup() ? 0 : deliveryFee();
 
     subtotalEl.textContent = money(subtotal);
     feeEl.textContent = fee === 0 && cart.length > 0 && isPickup() ? "Grátis" : money(fee);
     totalEl.textContent = money(subtotal + fee);
-    feeLabelEl.textContent = money(DELIVERY_FEE);
+    feeLabelEl.textContent = money(deliveryFee());
 
     addressBox.hidden = isPickup();
     if (isPickup()) hideAddressError();
@@ -169,22 +174,30 @@
     try {
       localStorage.setItem(CHECKOUT_KEY, JSON.stringify({
         mode: isPickup() ? "pickup" : "delivery",
-        address: isPickup() ? "" : address,
-        fee: DELIVERY_FEE
+        address: isPickup() ? "" : address
       }));
     } catch (e) { /* armazenamento indisponível */ }
 
     window.location.href = "pagamento.html";
   });
 
-  /* Se o cliente voltou da página de pagamento, recupera a escolha e o endereço */
-  try {
-    var saved = JSON.parse(localStorage.getItem(CHECKOUT_KEY));
-    if (saved) {
-      choose(saved.mode === "pickup" ? "pickup" : "delivery");
-      addressInput.value = saved.address || "";
+  /* Só mostra o carrinho depois de carregar o cardápio e a taxa do banco */
+  Store.ready().then(function (status) {
+    if (!status.ok) {
+      loadErr.textContent = "Não foi possível carregar o cardápio. Verifique sua conexão e atualize a página.";
+      loadErr.hidden = false;
+      return;
     }
-  } catch (e) { /* ignora */ }
 
-  render();
+    // Se o cliente voltou da página de pagamento, recupera a escolha e o endereço
+    try {
+      var saved = JSON.parse(localStorage.getItem(CHECKOUT_KEY));
+      if (saved) {
+        choose(saved.mode === "pickup" ? "pickup" : "delivery");
+        addressInput.value = saved.address || "";
+      }
+    } catch (e) { /* ignora */ }
+
+    render();
+  });
 })();
